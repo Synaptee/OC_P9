@@ -32,7 +32,6 @@ class Review(models.Model):
 
 
 class UserFollows(models.Model):
-    Meta = models.UniqueConstraint(unique_together=["user", "followed_user"])
     user = models.ForeignKey(
         to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="following"
     )
@@ -41,6 +40,13 @@ class UserFollows(models.Model):
         on_delete=models.CASCADE,
         related_name="followed_by",
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "followed_user"], name="unique_follows"
+            )
+        ]
 
     def __str__(self):
         return self.user.username + " follows " + self.followed_user.username
