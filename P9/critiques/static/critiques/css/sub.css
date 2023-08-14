@@ -1,0 +1,12 @@
+.header{display: flex;
+    justify-content: center;
+    }
+
+.hero_banner{display: flex;
+    justify-content: center;
+    padding-top: 15vh;
+    }
+
+.form_container h2{text-align: center;
+    padding-bottom: 20px;
+    }
