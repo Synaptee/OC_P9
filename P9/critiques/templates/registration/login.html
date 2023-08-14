@@ -1,8 +1,46 @@
-{% block content %}
-<h2>Login</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
-{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil</title>
+    <link rel="stylesheet" href="{% static 'critiques/css/login.css' %}">
+</head>
+
+<body>
+
+
+    <div class="header">
+        <h2>LITReview</h2>
+    </div>
+
+
+    <div class="hero_banner">
+
+        <div class="sub">
+            <h2>Inscrivez-vous maintenant</h2>
+            <button type="link">S'inscrire</button>
+        </div>
+
+        <div class="connect">
+            {% block content %}
+            <h2>Connectez-vous</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Se connecter</button>
+            </form>
+            {% endblock %}
+        </div>
+
+
+    </div>
+
+
+
+
+</body>
+
+</html>

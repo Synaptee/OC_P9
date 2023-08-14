@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="{% static 'critiques/css/sub.css' %}">
+</head>
+
+<body>
+
+
+    <div class="header">
+        <h2>LITReview</h2>
+    </div>
+
+
+    <div class="hero_banner">
+
+
+        {% block content %}
+        <h2>Inscrivez-vous</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">S'inscrire'</button>
+        </form>
+        {% endblock %}
+
+
+    </div>
+
+
+
+
+</body>
+
+</html>

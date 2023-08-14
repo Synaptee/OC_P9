@@ -1,0 +1,12 @@
+.header{display: flex;
+    justify-content: center;
+    }
+
+.hero_banner{display: flex;
+    justify-content: center;}
+
+.hero_banner div{width: 50%;
+    padding:20px;
+    text-align: center;
+    padding-top: 20vh;
+}
