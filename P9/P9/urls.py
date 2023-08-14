@@ -17,11 +17,12 @@ from django.contrib import admin
 from django.contrib.auth.views import (
     LoginView,
 )
-from critiques.views import SignUpView
+from critiques.views import SignUpView, base
 from django.urls import path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", LoginView.as_view(), name="login"),
     path("signup/", SignUpView.as_view(), name="signup"),
+    path("base/", base, name="base"),
 ]
