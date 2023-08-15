@@ -27,9 +27,6 @@ class Review(models.Model):
     time_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.headline
-
 
 class UserFollows(models.Model):
     user = models.ForeignKey(
@@ -47,6 +44,3 @@ class UserFollows(models.Model):
                 fields=["user", "followed_user"], name="unique_follows"
             )
         ]
-
-    def __str__(self):
-        return self.user.username + " follows " + self.followed_user.username
