@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LITReview</title>
     <link rel="stylesheet" href="{% static 'critiques/css/base.css' %}">
+    {% block additional_css %}{% endblock %}
 </head>
 
 <body>
@@ -27,6 +28,7 @@
         </div>
     </div>
 
+    {% block content %}{% endblock %}
 
 </body>
 
