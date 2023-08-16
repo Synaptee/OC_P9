@@ -21,15 +21,16 @@
 
         <div class="sub">
             <h2>Inscrivez-vous maintenant</h2>
-            <button type="link">S'inscrire</button>
+            <button><a href="signup">S'inscrire</a></button>
         </div>
 
         <div class="connect">
             {% block content %}
             <h2>Connectez-vous</h2>
-            <form method="post">
+            <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <input type="hidden" name="next" value="{% url 'user_dashboard' %}">
                 <button type="submit">Se connecter</button>
             </form>
             {% endblock %}
