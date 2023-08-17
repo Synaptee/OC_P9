@@ -13,5 +13,10 @@ class SignUpView(CreateView):
 
 
 @login_required
-def user_dashboard(request):
+def flux(request):
     return render(request, "flux.html")
+
+
+@login_required
+def abonnements(request):
+    return render(request, "abonnements.html")

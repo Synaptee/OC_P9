@@ -30,7 +30,7 @@
             <form method="POST">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <input type="hidden" name="next" value="{% url 'user_dashboard' %}">
+                <input type="hidden" name="next" value="{% url 'flux' %}">
                 <button type="submit">Se connecter</button>
             </form>
             {% endblock %}
