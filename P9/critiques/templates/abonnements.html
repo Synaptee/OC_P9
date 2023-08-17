@@ -11,13 +11,61 @@
 
     <section>
         <h2>Suivre d'autres utilisateurs</h2>
+
+        <form class="search" method="post">
+            {% csrf_token %}
+            <div class="input-container">
+                {{ form.username }}
+            </div>
+            <div class="button-container">
+                <button type="submit" id="search_user">Envoyer</button>
+            </div>
+        </form>
+
+
+        {% if message %}
+        <p class="error">{{ message }}</p>
+        {% endif %}
     </section>
+
+
     <section>
         <h2>Abonnements</h2>
+        {% if abonnements %}
+        <ul>
+            {% for follow in abonnements %}
+            <li>
+                {{ follow.followed_user.username }}
+
+                <!-- Formulaire de désabonnement pour cet utilisateur -->
+                <form method="post" action="{% url 'unsubscribe' %}">
+                    {% csrf_token %}
+                    <!-- Cet input caché contiendra l'ID de l'utilisateur à désabonner -->
+                    <input type="hidden" name="user_to_unfollow_id" value="{{ follow.followed_user.id }}">
+                    <button type="submit">Se désabonner</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>Vous n'êtes abonné à aucun utilisateur pour le moment.</p>
+        {% endif %}
     </section>
+
+
     <section>
         <h2>Abonnés</h2>
+        {% if abonnes %}
+        <ul>
+            {% for follow in abonnes %}
+            <li>{{ follow.user.username }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>Personne ne vous suit pour le moment.</p>
+        {% endif %}
     </section>
+
 
 </body>
 

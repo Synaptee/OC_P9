@@ -18,7 +18,7 @@ from django.contrib.auth.views import (
     LoginView,
     LogoutView,
 )
-from critiques.views import SignUpView, abonnements, flux
+from critiques.views import SignUpView, abonnements, flux, unsubscribe
 from django.urls import path
 
 urlpatterns = [
@@ -28,4 +28,5 @@ urlpatterns = [
     path("signup/", SignUpView.as_view(), name="signup"),
     path("flux/", flux, name="flux"),
     path("abonnements/", abonnements, name="abonnements"),
+    path("unsubscribe/", unsubscribe, name="unsubscribe"),
 ]

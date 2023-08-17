@@ -2,4 +2,8 @@ from django import forms
 
 
 class FollowUserForm(forms.Form):
-    username = forms.CharField(label="Nom d'utilisateur à suivre", max_length=150)
+    username = forms.CharField(
+        label="",
+        widget=forms.TextInput(attrs={"placeholder": "nom d'utilisateur"}),
+        max_length=150,
+    )

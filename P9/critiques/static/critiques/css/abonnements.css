@@ -1,1 +1,41 @@
-h2{text-align: center;}
+a {
+    text-decoration: none; 
+    color: inherit;       
+    background: none;     
+    border: none;          
+    padding: 0;         
+    margin: 0;             
+    outline: none;        
+    font-size: 100%;       
+    font-weight: inherit;  
+    cursor: pointer;      
+}
+
+h2, p{text-align: center;}
+
+.search {
+    display: flex;              
+    justify-content: center;   
+    align-items: center;       
+    gap: 10px;                 
+}
+
+.input-container,
+.button-container {
+    display: flex;             
+    align-items: center;     
+}
+
+#search_user, 
+.input-container input{
+    height: auto;               
+    padding: 10px 15px;       
+    margin: 0;                
+    border: 1px solid black;   
+    box-sizing: border-box;   
+}
+
+#search_user {
+    cursor: pointer;          
+}
+
