@@ -1,15 +1,4 @@
-a {
-    text-decoration: none; 
-    color: inherit;       
-    background: none;     
-    border: none;          
-    padding: 0;         
-    margin: 0;             
-    outline: none;        
-    font-size: 100%;       
-    font-weight: inherit;  
-    cursor: pointer;      
-}
+section{padding-top: 70px;}
 
 h2, p{text-align: center;}
 
@@ -39,3 +28,14 @@ h2, p{text-align: center;}
     cursor: pointer;          
 }
 
+.followed, .followers{
+    display: flex;            
+    align-items: center;       
+    justify-content: center; 
+    gap : 100px;
+    margin-bottom: 10px;       
+}
+
+.unfollow-form {
+    margin-left: 20px;     
+}
