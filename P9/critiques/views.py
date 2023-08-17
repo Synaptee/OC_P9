@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import UserFollows
-from .forms import FollowUserForm
+from .forms import FollowUserForm, TicketForm
 
 
 # Create your views here.
@@ -70,3 +70,21 @@ def unsubscribe(request):
             user=request.user, followed_user_id=user_to_unfollow_id
         ).delete()
     return redirect(reverse("abonnements"))
+
+
+@login_required
+def create_ticket(request):
+    if request.method == "POST":
+        form = TicketForm(request.POST, request.FILES)
+        if form.is_valid():
+            ticket = form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+            return redirect(reverse("flux"))
+    else:
+        form = TicketForm()
+
+    context = {
+        "form": form,
+    }
+    return render(request, "ticket.html", context)

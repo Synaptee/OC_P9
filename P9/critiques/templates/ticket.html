@@ -9,18 +9,21 @@
 
 <body>
 
-    <h2>Créer un ticket</h2>
-    <section>
-        <h3>Titre</h3>
-    </section>
-    <section>
-        <h3>Description</h3>
-    </section>
-    <section>
-        <h3>Image</h3>
-    </section>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h3>Titre</h3><br>
+        {{ form.title }}<br>
 
-    <a href="">Envoyer</a>
+        <h3>Description</h3><br>
+        {{ form.description }}<br>
+
+        <h3>Image</h3><br>
+        {{ form.image }}<br>
+        <div class="btn">
+            <button type="submit">Envoyer</button>
+        </div>
+    </form>
+
 </body>
 
 {% endblock %}
