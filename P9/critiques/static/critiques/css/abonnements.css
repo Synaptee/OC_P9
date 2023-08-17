@@ -28,7 +28,7 @@ h2, p{text-align: center;}
     cursor: pointer;          
 }
 
-.followed, .followers{
+.followed {
     display: flex;            
     align-items: center;       
     justify-content: center; 
@@ -39,3 +39,5 @@ h2, p{text-align: center;}
 .unfollow-form {
     margin-left: 20px;     
 }
+
+.followers{text-align: center;}
