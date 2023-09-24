@@ -1,0 +1,15 @@
+li{
+    padding-bottom: 50px;
+    border : solid 1px black;
+}
+
+.img_container{
+    padding-top: 20px;
+    width: 250px;
+    height: auto;
+}
+
+.img_container img{
+    width: 100%;
+    height: auto;
+}

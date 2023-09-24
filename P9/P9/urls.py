@@ -20,7 +20,17 @@ from django.contrib.auth.views import (
     LoginView,
     LogoutView,
 )
-from critiques.views import SignUpView, abonnements, flux, unsubscribe, create_ticket
+from critiques.views import (
+    SignUpView,
+    abonnements,
+    flux,
+    unsubscribe,
+    create_ticket,
+    user_tickets,
+    edit_ticket,
+    delete_ticket,
+    deleted,
+)
 from django.urls import path
 
 urlpatterns = [
@@ -32,6 +42,10 @@ urlpatterns = [
     path("abonnements/", abonnements, name="abonnements"),
     path("unsubscribe/", unsubscribe, name="unsubscribe"),
     path("ticket/", create_ticket, name="ticket"),
+    path("posts", user_tickets, name="posts"),
+    path("edit/<int:ticket_id>/", edit_ticket, name="edit_ticket"),
+    path("delete/<int:ticket_id>/", delete_ticket, name="delete_ticket"),
+    path("deleted/", deleted, name="deleted"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

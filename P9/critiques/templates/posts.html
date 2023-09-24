@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block additional_css %}
+<link rel="stylesheet" href="{% static 'critiques/css/posts.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5"><h2>Mes demandes de revue</h2>
+
+{% if tickets %}
+<ul>
+    {% for ticket in tickets %}
+    <li>
+        <strong>{{ ticket.title }}</strong><br>
+        {{ ticket.description }}<br>
+        {{ ticket.time_created }}<br>
+        {% if ticket.image %}
+        <div class="img_container">
+            <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}">
+        </div>
+        {% endif %}
+        <div class="container pt-3">
+            <form action="{% url 'edit_ticket' ticket.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Modifier</button>
+            </form>
+    
+            <form action="{% url 'delete_ticket' ticket.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Supprimer</button>
+            </form>
+        </div>
+       
+    </li>
+    {% endfor %}
+</ul>
+
+{% else %}
+<p>Vous n'avez pas encore créé de demandes de revue.</p>
+{% endif %}
+</div>
+
+
+
+{% endblock %}

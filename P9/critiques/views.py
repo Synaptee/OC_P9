@@ -4,8 +4,11 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import UserFollows
+from .models import UserFollows, Ticket
 from .forms import FollowUserForm, TicketForm
+from django.db.models import CharField, Value
+from itertools import chain
+from critiques import models
 
 
 # Create your views here.
@@ -17,7 +20,17 @@ class SignUpView(CreateView):
 
 @login_required
 def flux(request):
-    return render(request, "flux.html")
+    reviews = models.Review.objects.filter(user=request.user)
+    # returns queryset of reviews
+    reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+    tickets = models.Ticket.objects.filter(user=request.user)
+    # returns queryset of tickets
+    tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+    # combine and sort the two types of posts
+    posts = sorted(
+        chain(reviews, tickets), key=lambda post: post.time_created, reverse=True
+    )
+    return render(request, "flux.html", context={"posts": posts})
 
 
 @login_required
@@ -88,3 +101,36 @@ def create_ticket(request):
         "form": form,
     }
     return render(request, "ticket.html", context)
+
+
+@login_required
+def user_tickets(request):
+    user_tickets = Ticket.objects.filter(user=request.user)
+    return render(request, "posts.html", {"tickets": user_tickets})
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Ticket
+
+
+@login_required
+def edit_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+    if request.method == "POST":
+        # ... Traitement du formulaire ...
+        return redirect("nom_url_affichage_tickets")
+    return render(request, "edit_ticket.html", {"ticket": ticket})
+
+
+@login_required
+def delete_ticket(request, ticket_id):
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+    if request.method == "POST":
+        ticket.delete()
+        return render(request, "suppression.html")
+    return render(request, "posts.html", {"ticket": ticket})
+
+
+@login_required
+def deleted(request):
+    return render(request, "suppression.html")

@@ -5,6 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <title>LITReview</title>
     <link rel="stylesheet" href="{% static 'critiques/css/base.css' %}">
     {% block additional_css %}{% endblock %}
@@ -22,7 +24,7 @@
         <div class="navbar">
 
             <a href="{% url 'flux' %}">Flux</a>
-            <a href="">Posts</a>
+            <a href="{% url 'posts' %}">Posts</a>
             <a href="{% url 'abonnements' %}">Abonnements</a>
             <a href="{% url 'logout' %}">Se deconnecter</a>
         </div>
