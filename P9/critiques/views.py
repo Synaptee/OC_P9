@@ -59,12 +59,27 @@ def flux(request):
         content_type=Value("TICKET", CharField())
     )
 
-    # Combiner et trier tous les tickets et critiques
-    posts = sorted(
-        chain(user_reviews, user_tickets, followed_reviews, followed_tickets),
-        key=lambda post: post.time_created,
-        reverse=True,
+    # Les critiques associées aux tickets de l'utilisateur connecté
+    reviews_on_user_tickets = models.Review.objects.filter(
+        ticket__in=user_tickets
+    ).annotate(content_type=Value("REVIEW", CharField()))
+
+    # Combiner tous les tickets et critiques
+    combined_posts = chain(
+        user_reviews,
+        user_tickets,
+        followed_reviews,
+        followed_tickets,
+        reviews_on_user_tickets,
     )
+
+    # Utilisation d'un dictionnaire pour garantir l'unicité des articles en fonction de leur ID et de leur type
+    unique_posts = {
+        f"{post.id}_{post.content_type}": post for post in combined_posts
+    }.values()
+
+    # Trier les articles
+    posts = sorted(unique_posts, key=lambda post: post.time_created, reverse=True)
 
     return render(request, "flux.html", context={"posts": posts})
 
