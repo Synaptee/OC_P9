@@ -184,6 +184,16 @@ def delete_ticket(request, ticket_id):
 
 
 @login_required
+def delete_review(request, review_id):
+    """Fonction de suppression de ticket"""
+    review = get_object_or_404(Review, pk=review_id)
+    if request.method == "POST":
+        review.delete()
+        return render(request, "suppression.html")
+    return render(request, "flux.html", {"review": review})
+
+
+@login_required
 def deleted(request):
     """Page de confirmation de suppression de ticket"""
     return render(request, "suppression.html")

@@ -30,6 +30,7 @@ from critiques.views import (
     edit_ticket,
     edit_review,
     delete_ticket,
+    delete_review,
     deleted,
     create_critic,
 )
@@ -47,7 +48,8 @@ urlpatterns = [
     path("posts", user_tickets, name="posts"),
     path("edit_ticket/<int:ticket_id>/", edit_ticket, name="edit_ticket"),
     path("edit_review/<int:review_id>/", edit_review, name="edit_review"),
-    path("delete/<int:ticket_id>/", delete_ticket, name="delete_ticket"),
+    path("delete_review/<int:ticket_id>/", delete_ticket, name="delete_ticket"),
+    path("delete_critic/<int:review_id>/", delete_review, name="delete_review"),
     path("deleted/", deleted, name="deleted"),
     path("critics/", create_critic, name="critics"),
 ]
