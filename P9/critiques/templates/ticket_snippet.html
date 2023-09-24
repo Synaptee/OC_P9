@@ -15,7 +15,9 @@
     {% if post.image %}
         <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-height: 200px; width: auto;">
     {% endif %}
-    <button>Créer une critique</button>
+    {% if not post.review_set.exists %}
+        <button>Créer une critique</button>
+    {% endif %}
 {% endif %}
 
 <hr>
