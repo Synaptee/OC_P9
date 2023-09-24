@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<body>
+
 
     <div class="welcome">
         <h1>Bienvenue {{user.username}}</h1>
@@ -18,11 +18,14 @@
         <a href="" class="btn">Créer une critique</a>
     </div>
 
-    <div class="feed">
-
+    <div class="container feed">
+        {% for post in posts %}
+        {% if post.content_type == 'TICKET' %}
+            {% include 'ticket_snippet.html' %}
+        {% elif post.content_type == 'REVIEW' %}
+            {% include 'review_snippet.html' %}
+        {% endif %}
+    {% endfor %} 
+    
     </div>
-
-</body>
-
 {% endblock %}
-```

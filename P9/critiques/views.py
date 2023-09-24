@@ -20,18 +20,53 @@ class SignUpView(CreateView):
     success_url = reverse_lazy("login")
 
 
+# @login_required
+# def flux(request):
+#     reviews = models.Review.objects.filter(user=request.user)
+#     # returns queryset of reviews
+#     reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+#     tickets = models.Ticket.objects.filter(user=request.user)
+#     # returns queryset of tickets
+#     tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+#     # combine and sort the two types of posts
+#     posts = sorted(
+#         chain(reviews, tickets), key=lambda post: post.time_created, reverse=True
+#     )
+#     return render(request, "flux.html", context={"posts": posts})
+
+from django.db.models import Value, CharField
+from itertools import chain
+
+
 @login_required
 def flux(request):
-    reviews = models.Review.objects.filter(user=request.user)
-    # returns queryset of reviews
-    reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
-    tickets = models.Ticket.objects.filter(user=request.user)
-    # returns queryset of tickets
-    tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
-    # combine and sort the two types of posts
-    posts = sorted(
-        chain(reviews, tickets), key=lambda post: post.time_created, reverse=True
+    # Les tickets et critiques de l'utilisateur connecté
+    user_reviews = models.Review.objects.filter(user=request.user).annotate(
+        content_type=Value("REVIEW", CharField())
     )
+    user_tickets = models.Ticket.objects.filter(user=request.user).annotate(
+        content_type=Value("TICKET", CharField())
+    )
+
+    # Les utilisateurs que l'utilisateur actuel suit
+    followed_users = [uf.followed_user for uf in request.user.following.all()]
+
+    # Les tickets et critiques des utilisateurs suivis
+    followed_reviews = models.Review.objects.filter(user__in=followed_users).annotate(
+        content_type=Value("REVIEW", CharField())
+    )
+    followed_tickets = models.Ticket.objects.filter(user__in=followed_users).annotate(
+        content_type=Value("TICKET", CharField())
+    )
+
+    # Combiner et trier tous les tickets et critiques
+    posts = sorted(
+        chain(user_reviews, user_tickets, followed_reviews, followed_tickets),
+        key=lambda post: post.time_created,
+        reverse=True,
+    )
+    print(f"posts: {posts}")
+
     return render(request, "flux.html", context={"posts": posts})
 
 

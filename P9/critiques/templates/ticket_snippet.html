@@ -1,0 +1,21 @@
+<!-- ticket_snippet.html -->
+{% if post.user == request.user %}
+    Vous avez fait une demande<br>
+    {{ post.time_created }}<br>
+    <strong>{{ post.title }}</strong><br>
+    {{ post.description }}<br>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" width="auto" height="200px">
+    {% endif %}
+{% else %}
+   {{ post.user.username }} a fait une demande<br>
+   {{ post.time_created }}<br>
+    <strong>{{ post.title }}</strong><br>
+    {{ post.description }}<br>
+    {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" width="auto" height="200px">
+    {% endif %}
+    <button>Créer une critique</button>
+{% endif %}
+
+<hr>
