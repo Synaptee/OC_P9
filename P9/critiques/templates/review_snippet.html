@@ -5,7 +5,7 @@
 <strong>Note :</strong> {{ post.rating }}<br>
 {{ post.body }}<br>
 
-<div class="py-5" style="border:solid 1px black">
+<div class="py-2" style="border:solid 1px black">
     <p>Cette review vient en réponse au ticket</p><br>
     {{ post.ticket.title }}<br>
     {{ post.ticket.description }}<br>
@@ -15,9 +15,8 @@
 
 </div>
 {% if post.user == request.user %}
-
-    
-        <button>Modifier</button>
+        <br>
+        <button><a href="{% url 'edit_review' post.id %}">Modifier</a></button>
         <button>Supprimer</button>
     
 

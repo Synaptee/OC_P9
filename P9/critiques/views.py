@@ -10,7 +10,7 @@ from django.db.models import CharField, Value
 from itertools import chain
 from critiques import models
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Ticket
+from .models import Ticket, Review
 
 
 # Create your views here.
@@ -157,6 +157,20 @@ def edit_ticket(request, ticket_id):
     else:
         form = TicketForm(instance=ticket)
     return render(request, "edit_ticket.html", {"form": form, "ticket": ticket})
+
+
+@login_required
+def edit_review(request, review_id):
+    """Fonction d'édition de critiques"""
+    review = get_object_or_404(Review, pk=review_id)
+    if request.method == "POST":
+        form = ReviewForm(request.POST, request.FILES, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect("flux")
+    else:
+        form = ReviewForm(instance=review)
+    return render(request, "edit_critic.html", {"form": form, "review": review})
 
 
 @login_required
