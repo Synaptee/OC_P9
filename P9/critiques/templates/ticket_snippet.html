@@ -1,23 +1,25 @@
 <!-- ticket_snippet.html -->
-{% if post.user == request.user %}
-    Vous avez fait une demande<br>
+    {% if post.user == request.user %}
+        Vous avez fait une demande<br>
+    {% else %}
+    {{ post.user.username }} a fait une demande<br>
+    {% endif %}
     {{ post.time_created }}<br>
     <strong>{{ post.title }}</strong><br>
     {{ post.description }}<br>
     {% if post.image %}
         <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-height: 200px; width: auto;">
     {% endif %}
-{% else %}
-   {{ post.user.username }} a fait une demande<br>
-   {{ post.time_created }}<br>
-    <strong>{{ post.title }}</strong><br>
-    {{ post.description }}<br>
-    {% if post.image %}
-        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-height: 200px; width: auto;">
-    {% endif %}
+
+    {% if post.user == request.user %}
+    {% else %}
+ 
     {% if not post.review_set.exists %}
-        <button>Créer une critique</button>
+        <button><a href="{% url 'answer_ticket' post.id %}">Créer une critique</a></button>
     {% endif %}
-{% endif %}
+    {% endif %}
+
+ 
+
 
 <hr>

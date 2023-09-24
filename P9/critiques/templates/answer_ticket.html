@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block additional_css %}
+<!-- <link rel="stylesheet" href="{% static 'critiques/css/flux.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h3>Vous êtes en train de poster en réponse à :</h3>
+
+    <div class="container">
+        {{ ticket.title }} <br>
+        {{ ticket.time_created }} <br>
+        {{ ticket.description }} <br>
+        
+        {% if ticket.image %}
+        <div class="img_container">
+            <img src="{{ ticket.image.url }}" alt="{{ ticket.title }}" style="max-height: 200px; width: auto;">
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="container">
+    <h3>Critique</h3>
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>Titre</p>
+        {{ form.headline }}
+        <p>Note</p>
+        {{ form.rating }}
+        <p>Commentaire</p>
+        {{ form.body }}
+        <input type="submit" value="Envoyer">
+        </form>
+    </div>
+   
+</div>
+
+
+
+
+
+
+
+{% endblock %}

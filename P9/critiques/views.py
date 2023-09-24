@@ -201,6 +201,7 @@ def deleted(request):
 
 @login_required
 def create_critic(request):
+    """Fonction qui permet de créer un ticket et une critique en même temps"""
     if request.method == "POST":
         ticket_form = TicketForm(request.POST, request.FILES)
         review_form = ReviewForm(request.POST)
@@ -214,9 +215,7 @@ def create_critic(request):
             review.ticket = ticket
             review.user = request.user
             review.save()
-            return redirect(
-                "flux"
-            )  # Redirigez vers la page souhaitée après la création
+            return redirect("flux")
 
     else:
         ticket_form = TicketForm()
@@ -224,3 +223,20 @@ def create_critic(request):
 
     context = {"ticket_form": ticket_form, "review_form": review_form}
     return render(request, "create_critic.html", context)
+
+
+@login_required
+def answer_ticket(request, ticket_id):
+    """Fonction qui permet de répondre à un ticket"""
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+    if request.method == "POST":
+        form = ReviewForm(request.POST, request.FILES)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.ticket = ticket
+            review.user = request.user
+            review.save()
+            return redirect("flux")
+    else:
+        form = ReviewForm()
+    return render(request, "answer_ticket.html", {"form": form, "ticket": ticket})

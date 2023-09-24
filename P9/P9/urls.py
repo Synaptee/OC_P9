@@ -33,6 +33,7 @@ from critiques.views import (
     delete_review,
     deleted,
     create_critic,
+    answer_ticket,
 )
 from django.urls import path
 
@@ -52,6 +53,7 @@ urlpatterns = [
     path("delete_critic/<int:review_id>/", delete_review, name="delete_review"),
     path("deleted/", deleted, name="deleted"),
     path("critics/", create_critic, name="critics"),
+    path("answer_ticket/<int:ticket_id>/", answer_ticket, name="answer_ticket"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
