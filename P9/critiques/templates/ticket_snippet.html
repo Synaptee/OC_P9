@@ -5,7 +5,7 @@
     <strong>{{ post.title }}</strong><br>
     {{ post.description }}<br>
     {% if post.image %}
-        <img src="{{ post.image.url }}" alt="{{ post.title }}" width="auto" height="200px">
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-height: 200px; width: auto;">
     {% endif %}
 {% else %}
    {{ post.user.username }} a fait une demande<br>
@@ -13,7 +13,7 @@
     <strong>{{ post.title }}</strong><br>
     {{ post.description }}<br>
     {% if post.image %}
-        <img src="{{ post.image.url }}" alt="{{ post.title }}" width="auto" height="200px">
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-height: 200px; width: auto;">
     {% endif %}
     <button>Créer une critique</button>
 {% endif %}
