@@ -4,4 +4,14 @@
 {{ post.time_created }}<br>
 <strong>Note :</strong> {{ post.rating }}<br>
 {{ post.body }}<br>
+
+<div class="py-5" style="border:solid 1px black">
+    <p>Cette review vient en réponse au ticket</p><br>
+    {{ post.ticket.title }}<br>
+    {{ post.ticket.description }}<br>
+    {% if post.ticket.image %}
+    <img src="{{ post.ticket.image.url }}" alt="image du ticket" width="200px">
+    {% endif %}
+
+</div>
 <hr>
