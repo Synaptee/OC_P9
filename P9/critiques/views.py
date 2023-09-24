@@ -9,6 +9,8 @@ from .forms import FollowUserForm, TicketForm
 from django.db.models import CharField, Value
 from itertools import chain
 from critiques import models
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Ticket
 
 
 # Create your views here.
@@ -109,21 +111,23 @@ def user_tickets(request):
     return render(request, "posts.html", {"tickets": user_tickets})
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Ticket
-
-
 @login_required
 def edit_ticket(request, ticket_id):
+    """Fonction d'édition de ticket"""
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     if request.method == "POST":
-        # ... Traitement du formulaire ...
-        return redirect("nom_url_affichage_tickets")
-    return render(request, "edit_ticket.html", {"ticket": ticket})
+        form = TicketForm(request.POST, request.FILES, instance=ticket)
+        if form.is_valid():
+            form.save()
+            return redirect("posts")
+    else:
+        form = TicketForm(instance=ticket)
+    return render(request, "edit_ticket.html", {"form": form, "ticket": ticket})
 
 
 @login_required
 def delete_ticket(request, ticket_id):
+    """Fonction de suppression de ticket"""
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     if request.method == "POST":
         ticket.delete()
@@ -133,4 +137,5 @@ def delete_ticket(request, ticket_id):
 
 @login_required
 def deleted(request):
+    """Page de confirmation de suppression de ticket"""
     return render(request, "suppression.html")

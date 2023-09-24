@@ -22,11 +22,8 @@
         </div>
         {% endif %}
         <div class="container pt-3">
-            <form action="{% url 'edit_ticket' ticket.id %}" method="post">
-                {% csrf_token %}
-                <button type="submit">Modifier</button>
-            </form>
-    
+            <button><a href="{% url 'edit_ticket' ticket.id %}">Modifier</a>
+            </button>
             <form action="{% url 'delete_ticket' ticket.id %}" method="post">
                 {% csrf_token %}
                 <button type="submit">Supprimer</button>
