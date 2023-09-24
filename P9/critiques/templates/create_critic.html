@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block additional_css %}
+<!-- <link rel="stylesheet" href="{% static 'critiques/css/flux.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+
+
+
+    <div class="container">
+        <h1>Créer une critique</h1>
+    </div>
+
+
+
+    <div class="container">
+
+    <!-- create_ticket_and_review.html -->
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <h2>Livre / Article</h2>
+    <h4>Titre</h4>
+    {{ ticket_form.title }}
+    <h4>Description</h4>
+    {{ ticket_form.description }}
+    <h4>Image</h4>
+    {{ ticket_form.image }}
+
+    <h2>Critique</h2>
+    <h4>Titre</h4>
+    {{ review_form.headline }}
+    <h4>Note</h4>
+    {{ review_form.rating }}
+    <h4>Commentaire</h4>
+    {{ review_form.body }}
+
+    <input type="submit" value="Créer">
+</form>
+
+
+    </div>
+{% endblock %}

@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import UserFollows, Ticket
-from .forms import FollowUserForm, TicketForm
+from .forms import FollowUserForm, TicketForm, ReviewForm
 from django.db.models import CharField, Value
 from itertools import chain
 from critiques import models
@@ -65,7 +65,6 @@ def flux(request):
         key=lambda post: post.time_created,
         reverse=True,
     )
-    print(f"posts: {posts}")
 
     return render(request, "flux.html", context={"posts": posts})
 
@@ -174,3 +173,30 @@ def delete_ticket(request, ticket_id):
 def deleted(request):
     """Page de confirmation de suppression de ticket"""
     return render(request, "suppression.html")
+
+
+@login_required
+def create_critic(request):
+    if request.method == "POST":
+        ticket_form = TicketForm(request.POST, request.FILES)
+        review_form = ReviewForm(request.POST)
+
+        if ticket_form.is_valid() and review_form.is_valid():
+            ticket = ticket_form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+
+            review = review_form.save(commit=False)
+            review.ticket = ticket
+            review.user = request.user
+            review.save()
+            return redirect(
+                "flux"
+            )  # Redirigez vers la page souhaitée après la création
+
+    else:
+        ticket_form = TicketForm()
+        review_form = ReviewForm()
+
+    context = {"ticket_form": ticket_form, "review_form": review_form}
+    return render(request, "create_critic.html", context)
