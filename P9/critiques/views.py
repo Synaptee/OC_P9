@@ -24,6 +24,7 @@ class SignUpView(CreateView):
 
 @login_required
 def abonnements(request):
+    """Function that allows a user to follow another user"""
     user = request.user
     message = ""
 
@@ -66,6 +67,7 @@ def abonnements(request):
 
 @login_required
 def unsubscribe(request):
+    """Function that allows a user to unfollow another user"""
     if request.method == "POST":
         user_to_unfollow_id = request.POST.get("user_to_unfollow_id")
         UserFollows.objects.filter(
@@ -81,6 +83,7 @@ def unsubscribe(request):
 
 @login_required
 def create_ticket(request):
+    """Function that allows a user to create a ticket"""
     if request.method == "POST":
         form = TicketForm(request.POST, request.FILES)
         if form.is_valid():
@@ -99,13 +102,14 @@ def create_ticket(request):
 
 @login_required
 def user_tickets(request):
+    """Function that allows a user to see his tickets"""
     user_tickets = Ticket.objects.filter(user=request.user)
     return render(request, "posts.html", {"tickets": user_tickets})
 
 
 @login_required
 def edit_ticket(request, ticket_id):
-    """Fonction d'édition de ticket"""
+    """Function that allows a user to edit a ticket"""
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     if request.method == "POST":
         form = TicketForm(request.POST, request.FILES, instance=ticket)
@@ -119,7 +123,7 @@ def edit_ticket(request, ticket_id):
 
 @login_required
 def delete_ticket(request, ticket_id):
-    """Fonction de suppression de ticket"""
+    """Function that allows a user to delete a ticket"""
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     if request.method == "POST":
         ticket.delete()
@@ -129,7 +133,7 @@ def delete_ticket(request, ticket_id):
 
 @login_required
 def answer_ticket(request, ticket_id):
-    """Fonction qui permet de répondre à un ticket"""
+    """Function that allows a user to answer a ticket"""
     ticket = get_object_or_404(Ticket, pk=ticket_id)
     if request.method == "POST":
         form = ReviewForm(request.POST, request.FILES)
@@ -151,7 +155,7 @@ def answer_ticket(request, ticket_id):
 
 @login_required
 def edit_review(request, review_id):
-    """Fonction d'édition de critiques"""
+    """Function that allows a user to edit a review"""
     review = get_object_or_404(Review, pk=review_id)
     if request.method == "POST":
         form = ReviewForm(request.POST, request.FILES, instance=review)
@@ -165,7 +169,7 @@ def edit_review(request, review_id):
 
 @login_required
 def delete_review(request, review_id):
-    """Fonction de suppression de ticket"""
+    """Function that allows a user to delete a review"""
     review = get_object_or_404(Review, pk=review_id)
     if request.method == "POST":
         review.delete()
@@ -175,7 +179,7 @@ def delete_review(request, review_id):
 
 @login_required
 def create_critic(request):
-    """Fonction qui permet de créer un ticket et une critique en même temps"""
+    """Function that allows a user to create a ticket and a review at the same time"""
     if request.method == "POST":
         ticket_form = TicketForm(request.POST, request.FILES)
         review_form = ReviewForm(request.POST)
@@ -206,6 +210,7 @@ def create_critic(request):
 
 @login_required
 def flux(request):
+    """Function that allows a user to see his feed"""
     # Les tickets et critiques de l'utilisateur connecté
     user_reviews = Review.objects.filter(user=request.user).annotate(
         content_type=Value("REVIEW", CharField())
@@ -252,5 +257,5 @@ def flux(request):
 
 @login_required
 def deleted(request):
-    """Page de confirmation de suppression de ticket"""
+    """Page that confirms the deletion of a ticket or a review"""
     return render(request, "suppression.html")
