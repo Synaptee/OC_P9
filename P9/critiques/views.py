@@ -1,87 +1,25 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import UserFollows, Ticket
-from .forms import FollowUserForm, TicketForm, ReviewForm
-from django.db.models import CharField, Value
+from django.db.models import Value, CharField
 from itertools import chain
-from critiques import models
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Ticket, Review
+
+from .models import UserFollows, Ticket, Review
+from .forms import FollowUserForm, TicketForm, ReviewForm
 
 
-# Create your views here.
+# -----------------------
+# User and Authentication Views
+# -----------------------
+
+
 class SignUpView(CreateView):
     form_class = UserCreationForm
     template_name = "registration/signup.html"
     success_url = reverse_lazy("login")
-
-
-# @login_required
-# def flux(request):
-#     reviews = models.Review.objects.filter(user=request.user)
-#     # returns queryset of reviews
-#     reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
-#     tickets = models.Ticket.objects.filter(user=request.user)
-#     # returns queryset of tickets
-#     tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
-#     # combine and sort the two types of posts
-#     posts = sorted(
-#         chain(reviews, tickets), key=lambda post: post.time_created, reverse=True
-#     )
-#     return render(request, "flux.html", context={"posts": posts})
-
-from django.db.models import Value, CharField
-from itertools import chain
-
-
-@login_required
-def flux(request):
-    # Les tickets et critiques de l'utilisateur connecté
-    user_reviews = models.Review.objects.filter(user=request.user).annotate(
-        content_type=Value("REVIEW", CharField())
-    )
-    user_tickets = models.Ticket.objects.filter(user=request.user).annotate(
-        content_type=Value("TICKET", CharField())
-    )
-
-    # Les utilisateurs que l'utilisateur actuel suit
-    followed_users = [uf.followed_user for uf in request.user.following.all()]
-
-    # Les tickets et critiques des utilisateurs suivis
-    followed_reviews = models.Review.objects.filter(user__in=followed_users).annotate(
-        content_type=Value("REVIEW", CharField())
-    )
-    followed_tickets = models.Ticket.objects.filter(user__in=followed_users).annotate(
-        content_type=Value("TICKET", CharField())
-    )
-
-    # Les critiques associées aux tickets de l'utilisateur connecté
-    reviews_on_user_tickets = models.Review.objects.filter(
-        ticket__in=user_tickets
-    ).annotate(content_type=Value("REVIEW", CharField()))
-
-    # Combiner tous les tickets et critiques
-    combined_posts = chain(
-        user_reviews,
-        user_tickets,
-        followed_reviews,
-        followed_tickets,
-        reviews_on_user_tickets,
-    )
-
-    # Utilisation d'un dictionnaire pour garantir l'unicité des articles en fonction de leur ID et de leur type
-    unique_posts = {
-        f"{post.id}_{post.content_type}": post for post in combined_posts
-    }.values()
-
-    # Trier les articles
-    posts = sorted(unique_posts, key=lambda post: post.time_created, reverse=True)
-
-    return render(request, "flux.html", context={"posts": posts})
 
 
 @login_required
@@ -136,6 +74,11 @@ def unsubscribe(request):
     return redirect(reverse("abonnements"))
 
 
+# -----------------------
+# Ticket CRUD Views
+# -----------------------
+
+
 @login_required
 def create_ticket(request):
     if request.method == "POST":
@@ -175,6 +118,38 @@ def edit_ticket(request, ticket_id):
 
 
 @login_required
+def delete_ticket(request, ticket_id):
+    """Fonction de suppression de ticket"""
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+    if request.method == "POST":
+        ticket.delete()
+        return render(request, "suppression.html")
+    return render(request, "posts.html", {"ticket": ticket})
+
+
+@login_required
+def answer_ticket(request, ticket_id):
+    """Fonction qui permet de répondre à un ticket"""
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+    if request.method == "POST":
+        form = ReviewForm(request.POST, request.FILES)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.ticket = ticket
+            review.user = request.user
+            review.save()
+            return redirect("flux")
+    else:
+        form = ReviewForm()
+    return render(request, "answer_ticket.html", {"form": form, "ticket": ticket})
+
+
+# -----------------------
+# Review CRUD Views
+# -----------------------
+
+
+@login_required
 def edit_review(request, review_id):
     """Fonction d'édition de critiques"""
     review = get_object_or_404(Review, pk=review_id)
@@ -189,16 +164,6 @@ def edit_review(request, review_id):
 
 
 @login_required
-def delete_ticket(request, ticket_id):
-    """Fonction de suppression de ticket"""
-    ticket = get_object_or_404(Ticket, pk=ticket_id)
-    if request.method == "POST":
-        ticket.delete()
-        return render(request, "suppression.html")
-    return render(request, "posts.html", {"ticket": ticket})
-
-
-@login_required
 def delete_review(request, review_id):
     """Fonction de suppression de ticket"""
     review = get_object_or_404(Review, pk=review_id)
@@ -206,12 +171,6 @@ def delete_review(request, review_id):
         review.delete()
         return render(request, "suppression.html")
     return render(request, "flux.html", {"review": review})
-
-
-@login_required
-def deleted(request):
-    """Page de confirmation de suppression de ticket"""
-    return render(request, "suppression.html")
 
 
 @login_required
@@ -240,18 +199,58 @@ def create_critic(request):
     return render(request, "create_critic.html", context)
 
 
+# -----------------------
+# Miscellaneous Views
+# -----------------------
+
+
 @login_required
-def answer_ticket(request, ticket_id):
-    """Fonction qui permet de répondre à un ticket"""
-    ticket = get_object_or_404(Ticket, pk=ticket_id)
-    if request.method == "POST":
-        form = ReviewForm(request.POST, request.FILES)
-        if form.is_valid():
-            review = form.save(commit=False)
-            review.ticket = ticket
-            review.user = request.user
-            review.save()
-            return redirect("flux")
-    else:
-        form = ReviewForm()
-    return render(request, "answer_ticket.html", {"form": form, "ticket": ticket})
+def flux(request):
+    # Les tickets et critiques de l'utilisateur connecté
+    user_reviews = Review.objects.filter(user=request.user).annotate(
+        content_type=Value("REVIEW", CharField())
+    )
+    user_tickets = Ticket.objects.filter(user=request.user).annotate(
+        content_type=Value("TICKET", CharField())
+    )
+
+    # Les utilisateurs que l'utilisateur actuel suit
+    followed_users = [uf.followed_user for uf in request.user.following.all()]
+
+    # Les tickets et critiques des utilisateurs suivis
+    followed_reviews = Review.objects.filter(user__in=followed_users).annotate(
+        content_type=Value("REVIEW", CharField())
+    )
+    followed_tickets = Ticket.objects.filter(user__in=followed_users).annotate(
+        content_type=Value("TICKET", CharField())
+    )
+
+    # Les critiques associées aux tickets de l'utilisateur connecté
+    reviews_on_user_tickets = Review.objects.filter(ticket__in=user_tickets).annotate(
+        content_type=Value("REVIEW", CharField())
+    )
+
+    # Combiner tous les tickets et critiques
+    combined_posts = chain(
+        user_reviews,
+        user_tickets,
+        followed_reviews,
+        followed_tickets,
+        reviews_on_user_tickets,
+    )
+
+    # Utilisation d'un dictionnaire pour garantir l'unicité des articles en fonction de leur ID et de leur type
+    unique_posts = {
+        f"{post.id}_{post.content_type}": post for post in combined_posts
+    }.values()
+
+    # Trier les articles
+    posts = sorted(unique_posts, key=lambda post: post.time_created, reverse=True)
+
+    return render(request, "flux.html", context={"posts": posts})
+
+
+@login_required
+def deleted(request):
+    """Page de confirmation de suppression de ticket"""
+    return render(request, "suppression.html")
