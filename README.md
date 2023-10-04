@@ -32,9 +32,12 @@ Ce projet permet aux utilisateurs de créer des tickets, écrire des critiques, 
 ## Installation
 
 1. Clonez ce dépôt : `git clone [URL REPO]`
+venv
 2. Installez les dépendances: `pip install -r requirements.txt`
 3. Appliquez les migrations : `python manage.py migrate`
 4. Lancez le serveur : `python manage.py runserver`
+
+3users exemples
 
 ## Utilisation
 

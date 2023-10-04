@@ -243,8 +243,6 @@ def flux(request):
         followed_tickets,
         reviews_on_user_tickets,
     )
-
-    # Utilisation d'un dictionnaire pour garantir l'unicité des articles en fonction de leur ID et de leur type
     unique_posts = {
         f"{post.id}_{post.content_type}": post for post in combined_posts
     }.values()
