@@ -11,7 +11,7 @@ class Ticket(models.Model):
         max_length=2048, blank=True, help_text="Optional description for the ticket."
     )
     image = models.ImageField(
-        null=True, blank=True, help_text="Optional image for the ticket."
+        null=True, blank=True, help_text="Optional image for the ticket"
     )
     time_created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
